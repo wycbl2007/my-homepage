@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>温酒斩华腾 · 个人主页</title>
+<meta name="description" content="计算机专业大一学生的个人主页。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236ee7ff'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3C/svg%3E" />
+
+<!--
+  ============================================================
+  这个页面只有这一个文件，双击就能在浏览器里打开。
+  你大概只需要改 6 个地方，都在下面用【改这里】标出来了：
+    1. 名字            （已经换成你的了，想改就全局搜索它）
+    2. 一句话介绍      （IDEA 那句）
+    3. "关于我" 那段话
+    4. 技能卡片
+    5. 项目卡片
+    6. 联系方式链接
+  改完保存，浏览器按 F5 就能看到效果。
+  ============================================================
+-->
+
+<script>
+  // 只有脚本真的跑起来，才启用「滚动淡入」的隐藏效果；
+  // 万一 JS 出错或被禁用，内容照样看得见（不会白屏）。
+  document.documentElement.classList.add("js");
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --bg: #07070c;
+    --surface: rgba(255, 255, 255, 0.035);
+    --line: rgba(255, 255, 255, 0.09);
+    --text: #ececf5;
+    --muted: #9494ab;
+    --cyan: #6ee7ff;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, "PingFang SC", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; }
+
+  /* ---------- 背景装饰：网格 + 两块光斑 + 跟随鼠标的微光 ---------- */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(circle at 50% 28%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(circle at 50% 28%, #000 0%, transparent 78%);
+  }
+
+  .glow {
+    position: fixed; border-radius: 50%; filter: blur(120px);
+    opacity: 0.55; pointer-events: none; z-index: 0;
+  }
+  .glow-1 { width: 520px; height: 520px; background: #3b1d7a; top: -170px; left: -130px; animation: float1 18s ease-in-out infinite; }
+  .glow-2 { width: 620px; height: 620px; background: #0e4a63; bottom: -280px; right: -190px; animation: float2 22s ease-in-out infinite; }
+  @keyframes float1 { 50% { transform: translate(80px, 60px) scale(1.1); } }
+  @keyframes float2 { 50% { transform: translate(-70px, -50px) scale(1.08); } }
+
+  .cursor-light {
+    position: fixed; width: 620px; height: 620px; border-radius: 50%;
+    pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.45s;
+    background: radial-gradient(circle, rgba(110, 231, 255, 0.075), transparent 62%);
+    transform: translate(-50%, -50%);
+  }
+
+  /* ---------- 顶部导航 ---------- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px clamp(20px, 5vw, 64px);
+    background: linear-gradient(to bottom, rgba(7, 7, 12, 0.9), rgba(7, 7, 12, 0.25));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  }
+  .logo {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    color: #07070c; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav nav { display: flex; gap: clamp(14px, 3vw, 30px); }
+  .nav nav a {
+    position: relative; text-decoration: none; color: var(--muted);
+    font-size: 0.88rem; padding: 4px 0; transition: color 0.25s;
+  }
+  .nav nav a::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0;
+    background: var(--cyan); transition: width 0.28s ease;
+  }
+  .nav nav a:hover { color: var(--text); }
+  .nav nav a:hover::after { width: 100%; }
+
+  /* ---------- 首屏 ---------- */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    max-width: 1100px; margin: 0 auto;
+    padding: 130px clamp(22px, 6vw, 80px) 90px;
+  }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.22em;
+    color: var(--cyan); margin: 0 0 18px; opacity: 0.9;
+  }
+  .hero h1 {
+    width: fit-content; /* 让渐变刚好铺满这几个字，而不是铺满整行 */
+    font-size: clamp(2.9rem, 9vw, 6rem);
+    line-height: 1.02; letter-spacing: -0.045em; font-weight: 800;
+    margin: 0 0 14px;
+    background: linear-gradient(135deg, #ffffff 0%, #dfe3ff 36%, #b9a2ff 68%, var(--pink) 100%);
+    background-size: 140% 140%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shift 16s ease-in-out infinite;
+  }
+  @keyframes shift { 50% { background-position: 100% 100%; } }
+
+  .type-line {
+    font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.35rem);
+    color: var(--muted); margin: 0 0 20px; min-height: 1.9em;
+  }
+  .caret {
+    display: inline-block; width: 2px; height: 1.05em; margin-left: 3px;
+    background: var(--cyan); vertical-align: -0.12em;
+    animation: blink 1.05s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .lede {
+    font-size: clamp(1.02rem, 2vw, 1.18rem);
+    color: #c3c3d6; max-width: 46ch; margin: 0 0 36px;
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 999px;
+    font-size: 0.95rem; font-weight: 600; text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s, border-color 0.25s;
+  }
+  .btn-primary {
+    background: linear-gradient(120deg, var(--cyan), var(--violet));
+    color: #08080f;
+    box-shadow: 0 10px 34px -12px rgba(110, 231, 255, 0.55);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 44px -12px rgba(167, 139, 250, 0.6); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--text); }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.055); border-color: rgba(255, 255, 255, 0.22); transform: translateY(-2px); }
+
+  .scroll-hint {
+    position: absolute; left: clamp(22px, 6vw, 80px); bottom: 34px;
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em;
+    color: rgba(148, 148, 171, 0.65); display: flex; align-items: center; gap: 10px;
+  }
+  .scroll-hint span { display: block; width: 1px; height: 34px; background: linear-gradient(rgba(110, 231, 255, 0.55), transparent); animation: drop 2.2s ease-in-out infinite; }
+  @keyframes drop { 0%, 100% { transform: scaleY(0.4); opacity: 0.4; } 50% { transform: scaleY(1); opacity: 1; } }
+
+  ::selection { background: rgba(167, 139, 250, 0.35); color: #fff; }
+
+  /* ---------- 通用区块 ---------- */
+  section {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto;
+    padding: clamp(56px, 7.5vw, 92px) clamp(22px, 6vw, 80px);
+    scroll-margin-top: 78px; /* 点导航跳过来时，别被顶部那条栏挡住标题 */
+  }
+  .sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 42px; }
+  .sec-head .num { font-family: var(--mono); font-size: 0.82rem; color: var(--cyan); letter-spacing: 0.1em; }
+  .sec-head h2 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); margin: 0; letter-spacing: -0.02em; font-weight: 700; }
+  .sec-head .rule { flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+
+  .about-text { font-size: clamp(1rem, 1.9vw, 1.1rem); color: #c3c3d6; max-width: 62ch; margin: 0 0 14px; }
+  .about-text strong { color: var(--text); font-weight: 600; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .tag {
+    font-size: 0.84rem; padding: 6px 15px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--muted); background: rgba(255, 255, 255, 0.02);
+  }
+
+  /* ---------- 卡片（技能 / 项目） ---------- */
+  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+  .card {
+    position: relative; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 18px; padding: 28px 26px;
+    transition: transform 0.32s ease, border-color 0.32s, background 0.32s;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 0.32s;
+    background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.07), transparent 45%);
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(167, 139, 250, 0.35); background: rgba(255, 255, 255, 0.05); }
+  .card:hover::before { opacity: 1; }
+  .card > * { position: relative; }
+
+  .card .kicker { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em; color: var(--violet); text-transform: uppercase; }
+  .card h3 { margin: 10px 0 8px; font-size: 1.12rem; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+
+  .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-family: var(--mono); font-size: 0.72rem; padding: 3px 10px; border-radius: 6px;
+    background: rgba(110, 231, 255, 0.08); color: #9fe9ff; border: 1px solid rgba(110, 231, 255, 0.16);
+  }
+  .chip.alt { background: rgba(167, 139, 250, 0.09); color: #c9b8ff; border-color: rgba(167, 139, 250, 0.18); }
+
+  /* ---------- 时间线 ---------- */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(var(--cyan), var(--violet) 55%, transparent);
+  }
+  .tl-item { position: relative; padding-bottom: 32px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ""; position: absolute; left: -30px; top: 7px; width: 13px; height: 13px;
+    border-radius: 50%; background: var(--bg); border: 2px solid var(--violet);
+    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.09);
+  }
+  .tl-item .date { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.1em; color: var(--cyan); }
+  .tl-item h3 { margin: 5px 0 3px; font-size: 1.02rem; font-weight: 600; }
+  .tl-item p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+  /* ---------- 联系 ---------- */
+  .contact-box {
+    text-align: center;
+    border: 1px solid var(--line); border-radius: 24px;
+    background: linear-gradient(160deg, rgba(110, 231, 255, 0.05), rgba(167, 139, 250, 0.05));
+    padding: clamp(40px, 7vw, 68px) clamp(24px, 5vw, 56px);
+  }
+  .contact-box h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 12px; letter-spacing: -0.02em; }
+  .contact-box p { color: var(--muted); margin: 0 0 30px; }
+  .contact-box .actions { justify-content: center; }
+
+  footer {
+    position: relative; z-index: 1; text-align: center;
+    padding: 44px 20px 46px; color: rgba(148, 148, 171, 0.8); font-size: 0.83rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.045);
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ---------- 滚动淡入 ---------- */
+  /* 注意：只有 JS 正常运行（给 <html> 加了 .js）才隐藏内容。
+     这样万一脚本出错被禁用，页面内容照样看得见。 */
+  .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.75s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 620px) {
+    .nav nav { gap: 14px; }
+    .nav nav a { font-size: 0.8rem; }
+    .scroll-hint { display: none; }
+    .cursor-light { display: none; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="cursor-light" id="cursorLight"></div>
+
+  <header class="nav">
+    <!-- 【改这里】logo 里的两个字母，用你名字的缩写 -->
+    <a class="logo" href="#top">温</a>
+    <nav>
+      <a href="#about">关于</a>
+      <a href="#skills">技能</a>
+      <a href="#projects">项目</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- ========== 首屏 ========== -->
+    <section class="hero">
+      <p class="eyebrow">// HELLO, WORLD</p>
+      <!-- 【改这里】温酒斩华腾 -->
+      <h1>温酒斩华腾</h1>
+      <p class="type-line"><span id="typed"></span><span class="caret"></span></p>
+      <!-- 【改这里】一句话介绍自己 -->
+      <p class="lede">正在从零开始，把每一个想法写成能跑起来的代码。</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#projects">看看我在做什么 →</a>
+        <a class="btn btn-ghost" href="#contact">找到我</a>
+      </div>
+      <div class="scroll-hint"><span></span>SCROLL</div>
+    </section>
+
+    <!-- ========== 关于 ========== -->
+    <section id="about">
+      <div class="sec-head reveal">
+        <span class="num">01</span>
+        <h2>关于我</h2>
+        <span class="rule"></span>
+      </div>
+      <!-- 【改这里】整段换成你自己的话 -->
+      <p class="about-text reveal">
+        我是计算机类专业的大一学生。比起背定义，我更想先把东西做出来——哪怕很小。
+        这是我目前唯一确信的学习方法。
+      </p>
+      <p class="about-text reveal">
+        现在在学 <strong>C++</strong>，也刚开始用 <strong>Git</strong> 给自己写的代码留下历史。
+        这个页面是我的第一件完整作品，没有用模板，从一行 HTML 写起。
+      </p>
+      <div class="tags reveal">
+        <span class="tag">C++</span>
+        <span class="tag">Git</span>
+        <span class="tag">HTML / CSS</span>
+        <span class="tag">命令行</span>
+        <span class="tag">正在学：算法</span>
+      </div>
+    </section>
+
+    <!-- ========== 技能 ========== -->
+    <section id="skills">
+      <div class="sec-head reveal">
+        <span class="num">02</span>
+        <h2>我正在会的</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="grid">
+        <!-- 【改这里】三张卡的内容 -->
+        <article class="card reveal">
+          <div class="kicker">Language</div>
+          <h3>C++</h3>
+          <p>在写课程作业，也在啃算法题。目标是每一行代码都说得清为什么这么写。</p>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Tool</div>
+          <h3>Git</h3>
+          <p>刚学会给代码"存档"和回滚。第一次觉得随便改也是安全的。</p>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Web</div>
+          <h3>HTML / CSS</h3>
+          <p>能让想法变成看得见的东西。比如你正在看的这一页。</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========== 项目 ========== -->
+    <section id="projects">
+      <div class="sec-head reveal">
+        <span class="num">03</span>
+        <h2>做过的东西</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="grid">
+        <!-- 【改这里】项目卡片，以后每做一个就复制一张 -->
+        <article class="card reveal">
+          <div class="kicker">Now</div>
+          <h3>你现在看到的这个页面</h3>
+          <p>手写，没有框架也没有依赖。第一次把代码放进浏览器。</p>
+          <div class="project-meta">
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+            <span class="chip alt">2026.10</span>
+          </div>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Practice</div>
+          <h3>C++ 练习集</h3>
+          <p>课程作业和练习题的归档。写得不漂亮，但每道都跑通过。</p>
+          <div class="project-meta">
+            <span class="chip">C++</span>
+            <span class="chip alt">2026.09 —</span>
+          </div>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Todo</div>
+          <h3>还没想好</h3>
+          <p>这个位置留给下一个想法。想到什么就填进来。</p>
+          <div class="project-meta">
+            <span class="chip alt">待定</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========== 时间线 ========== -->
+    <section id="timeline">
+      <div class="sec-head reveal">
+        <span class="num">04</span>
+        <h2>走到这里的路</h2>
+        <span class="rule"></span>
+      </div>
+      <!-- 【改这里】时间线，按你自己的经历改 -->
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="date">2026.09</div>
+          <h3>开学</h3>
+          <p>装好第一个编译器，写下 hello world。</p>
+        </div>
+        <div class="tl-item reveal">
+          <div class="date">2026.10</div>
+          <h3>第一次 git commit</h3>
+          <p>学会给代码"存档"，也学会改坏了能退回去。</p>
+        </div>
+        <div class="tl-item reveal">
+          <div class="date">2026.10</div>
+          <h3>写下这个页面</h3>
+          <p>代码第一次不只是打印在终端里，而是出现在浏览器里。</p>
+        </div>
+        <div class="tl-item reveal">
+          <div class="date">下一个</div>
+          <h3>留给你</h3>
+          <p>等你把它上线之后，自己来填这一行。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 联系 ========== -->
+    <section id="contact">
+      <div class="contact-box reveal">
+        <h2>想聊聊，或者只是打个招呼</h2>
+        <p>发邮件最快。GitHub 上也欢迎来看看。</p>
+        <div class="actions">
+          <!-- 【改这里】把 href 换成你自己的邮箱和 GitHub 主页 -->
+          <a class="btn btn-primary" href="mailto:you@example.com">给我写信</a>
+          <a class="btn btn-ghost" href="https://github.com/" target="_blank" rel="noopener">看我的 GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <!-- 【改这里】名字 -->
+    © 2026 温酒斩华腾 · 用 HTML 和 CSS 手写 · 没有用模板
+  </footer>
+
+<script>
+  /* ---------- 1. 打字机：循环显示几句话 ---------- */
+  // 【改这里】想换的话就改这个数组
+  const LINES = [
+    "计算机专业的大一学生",
+    "在学 C++、Git 和网页",
+    "把手写代码变成能看见的东西",
+    "先做出来，再做好"
+  ];
+
+  const typedEl = document.getElementById("typed");
+  let lineIndex = 0, charIndex = 0, deleting = false;
+
+  function tick() {
+    const line = LINES[lineIndex];
+    if (!deleting) {
+      charIndex++;
+      typedEl.textContent = line.slice(0, charIndex);
+      if (charIndex === line.length) {
+        deleting = true;
+        return setTimeout(tick, 1700);
+      }
+      return setTimeout(tick, 70);
+    }
+    charIndex--;
+    typedEl.textContent = line.slice(0, charIndex);
+    if (charIndex === 0) {
+      deleting = false;
+      lineIndex = (lineIndex + 1) % LINES.length;
+      return setTimeout(tick, 420);
+    }
+    setTimeout(tick, 34);
+  }
+  tick();
+
+  /* ---------- 2. 滚动到哪，哪块就淡入 ---------- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+
+  document.querySelectorAll(".reveal").forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 70 + "ms";
+    io.observe(el);
+  });
+
+  /* ---------- 3. 卡片跟随鼠标的微光（只在有鼠标的设备上） ---------- */
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  if (finePointer) {
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        card.style.setProperty("--my", (e.clientY - r.top) + "px");
+      });
+    });
+
+    /* ---------- 4. 跟随鼠标的一大团柔光 ---------- */
+    const light = document.getElementById("cursorLight");
+    let lx = window.innerWidth / 2, ly = window.innerHeight / 2, cx = lx, cy = ly;
+    window.addEventListener("mousemove", (e) => { lx = e.clientX; ly = e.clientY; light.style.opacity = "1"; });
+    (function follow() {
+      cx += (lx - cx) * 0.08;
+      cy += (ly - cy) * 0.08;
+      light.style.left = cx + "px";
+      light.style.top = cy + "px";
+      requestAnimationFrame(follow);
+    })();
+  }
+</script>
+</body>
+</html>
