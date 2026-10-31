@@ -227,6 +227,8 @@
     background: rgba(110, 231, 255, 0.08); color: #9fe9ff; border: 1px solid rgba(110, 231, 255, 0.16);
   }
   .chip.alt { background: rgba(167, 139, 250, 0.09); color: #c9b8ff; border-color: rgba(167, 139, 250, 0.18); }
+  a.chip { text-decoration: none; transition: background 0.25s, border-color 0.25s, color 0.25s; }
+  a.chip:hover { background: rgba(110, 231, 255, 0.18); border-color: rgba(110, 231, 255, 0.4); color: #d6f6ff; }
 
   /* ---------- 时间线 ---------- */
   .timeline { position: relative; padding-left: 30px; }
@@ -297,6 +299,7 @@
       <a href="#about">关于</a>
       <a href="#skills">技能</a>
       <a href="#projects">项目</a>
+      <a href="#learning">学习</a>
       <a href="#contact">联系</a>
     </nav>
   </header>
@@ -385,15 +388,16 @@
           <div class="project-meta">
             <span class="chip">HTML</span>
             <span class="chip">CSS</span>
-            <span class="chip alt">2026.10</span>
+            <a class="chip alt" href="https://wycbl2007.github.io/my-homepage/" target="_blank" rel="noopener">线上版 ↗</a>
           </div>
         </article>
         <article class="card reveal">
           <div class="kicker">Practice</div>
-          <h3>C++ 练习集</h3>
-          <p>课程作业和练习题的归档。写得不漂亮，但每道都跑通过。</p>
+          <h3>高程课作业集</h3>
+          <p>11 道题，C 和 C++ 各一遍。从求圆面积到人民币转大写，每道都过了 OJ 的测试数据。</p>
           <div class="project-meta">
             <span class="chip">C++</span>
+            <span class="chip">C</span>
             <span class="chip alt">2026.09 —</span>
           </div>
         </article>
@@ -408,10 +412,36 @@
       </div>
     </section>
 
+    <!-- ========== 我在学的 ========== -->
+    <section id="learning">
+      <div class="sec-head reveal">
+        <span class="num">04</span>
+        <h2>我正在学的</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="grid">
+        <article class="card reveal">
+          <div class="kicker">Course</div>
+          <h3>《高程语言程序设计》</h3>
+          <p>课上的第一条规矩是：同一道题，C 写一遍、C++ 再写一遍。写完才看得出这两种语言到底差在哪。</p>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Practice</div>
+          <h3>已经跑通的 11 道题</h3>
+          <p>求圆、分解整数、分解浮点数、三角形面积、算一年第几天、人民币转大写、人民币找零……每一道都要求 0 错误 0 警告。</p>
+        </article>
+        <article class="card reveal">
+          <div class="kicker">Next</div>
+          <h3>接下来</h3>
+          <p>最近在练选择结构，下一步是循环。也在学着把每一次改动都记进 Git。</p>
+        </article>
+      </div>
+    </section>
+
     <!-- ========== 时间线 ========== -->
     <section id="timeline">
       <div class="sec-head reveal">
-        <span class="num">04</span>
+        <span class="num">05</span>
         <h2>走到这里的路</h2>
         <span class="rule"></span>
       </div>
